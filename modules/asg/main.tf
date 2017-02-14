@@ -14,28 +14,20 @@ variable "region" {
   default = "eu-west-2"
 }
 
-resource "aws_cloudformation_stack" "multi_zone_rolling_upgrade_asg" {
-  name = "my-asg"
-
-  template_body = <<EOF
-{
-  "Resources": {
-    "MyAsg": {
-      "Type": "AWS::AutoScaling::AutoScalingGroup",
-      "Properties": {
-        "AvailabilityZones": {"Fn::GetAZs": "${var.region}"},
-        "LaunchConfigurationName": "${var.launch_config_name}",
-        "MaxSize": ${var.max_size},
-        "MinSize": ${var.min_size}
-      },
-      "UpdatePolicy": {
-        "AutoScalingRollingUpdate": {
-          "MinInstancesInService": ${var.min_instances_in_service},
-          "MaxBatchSize": ${var.max_batch_size}
-        }
-      }
-    }
-  }
+resource "aws_cloudformation_stack" "all_zones_asg" {
+  name          = "my-asg"
+  template_body = "${data.template_file.cloudformation_auto_scaling_group.rendered}"
 }
-EOF
+
+data "template_file" "cloudformation_auto_scaling_group" {
+  template = "${file("${path.module}/cf.tpl")}"
+
+  vars {
+    region                   = "${var.region}"
+    launch_configuration     = "${var.launch_config_name}"
+    max_size                 = "${var.max_size}"
+    min_size                 = "${var.min_size}"
+    min_instances_in_service = "${var.min_instances_in_service}"
+    max_batch_size           = "${var.max_batch_size}"
+  }
 }
