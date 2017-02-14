@@ -28,6 +28,7 @@ resource "aws_launch_configuration" "launch_configuration" {
   name          = "test_launch_config"
   image_id      = "${data.aws_ami.ubuntu16.id}"
   instance_type = "t2.micro"
+
   lifecycle {
     create_before_destroy = true
   }
@@ -36,6 +37,7 @@ resource "aws_launch_configuration" "launch_configuration" {
 resource "aws_cloudformation_stack" "all_zones_asg" {
   name          = "my-asg"
   template_body = "${data.template_file.cloudformation_auto_scaling_group.rendered}"
+  depends_on    = ["aws_launch_configuration.launch_configuration"]
 }
 
 data "template_file" "cloudformation_auto_scaling_group" {
