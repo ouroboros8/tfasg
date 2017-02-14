@@ -1,0 +1,10 @@
+# Compiled files
+*.tfstate
+*.tfstate.backup
+
+# Module directory
+.terraform/
+
+# Graphs created with terraform graph and GraphViz
+*.gv
+*.pdf
