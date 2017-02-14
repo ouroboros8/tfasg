@@ -17,7 +17,7 @@ data "aws_ami" "ubuntu16" {
 }
 
 resource "aws_launch_configuration" "launch_configuration" {
-  image_id      = "${data.aws_ami.centos7.id}"
+  image_id      = "${data.aws_ami.ubuntu16.id}"
   instance_type = "t2.micro"
 
   lifecycle {
@@ -40,7 +40,7 @@ resource "aws_cloudformation_stack" "all_zones_asg" {
       },
       "UpdatePolicy": {
         "AutoScalingRollingUpdate": {
-          "MinInstancesInService": "2",
+          "MinInstancesInService": "1",
           "MaxBatchSize": "1",
           "PauseTime": "PT0S"
         }
