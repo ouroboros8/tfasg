@@ -22,7 +22,7 @@ resource "aws_cloudformation_stack" "all_zones_asg" {
 }
 
 data "template_file" "cloudformation_auto_scaling_group" {
-  template = "${file("cf.json.tpl")}"
+  template = "${file("./cf.tpl")}"
 
   vars {
     launch_configuration = "${aws_launch_configuration.launch_configuration.name}"
