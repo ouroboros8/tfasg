@@ -25,8 +25,7 @@ variable "min_size" {
 }
 
 resource "aws_launch_configuration" "launch_configuration" {
-  name          = "test_launch_config"
-  image_id      = "${data.aws_ami.ubuntu16.id}"
+  image_id      = "${data.aws_ami.centos7.id}"
   instance_type = "t2.micro"
 
   lifecycle {
