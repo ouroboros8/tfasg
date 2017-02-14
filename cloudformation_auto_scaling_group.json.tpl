@@ -3,10 +3,10 @@
     "MyAsg": {
       "Type": "AWS::AutoScaling::AutoScalingGroup",
       "Properties": {
-        "AvailabilityZones": "Fn::GetAZs",
+        "AvailabilityZones": {"Fn::GetAZs": "eu-west-2"},
         "LaunchConfigurationName": "${launch_configuration}",
-        "MaxSize": "${max_size}",
-        "MinSize": "${min_size}",
+        "MaxSize": ${max_size},
+        "MinSize": ${min_size}
       },
       "UpdatePolicy": {
         "AutoScalingRollingUpdate": {

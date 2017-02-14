@@ -2,8 +2,17 @@ data "aws_ami" "centos7" {
   most_recent = true
 
   filter {
-    name   = "product-code"
-    values = ["aw0evgkw8e5c1q413zgy5pjce"]
+    name   = "image-id"
+    values = ["ami-bb373ddf"]
+  }
+}
+
+data "aws_ami" "ubuntu16" {
+  most_recent = true
+
+  filter {
+    name   = "image-id"
+    values = ["ami-ede2e889"]
   }
 }
 
@@ -16,22 +25,25 @@ variable "min_size" {
 }
 
 resource "aws_launch_configuration" "launch_configuration" {
-  name = "test_launch_config"
-  image_id = "${data.aws_ami.centos7.id}"
+  name          = "test_launch_config"
+  image_id      = "${data.aws_ami.ubuntu16.id}"
   instance_type = "t2.micro"
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_cloudformation_stack" "all_zones_asg" {
-  name = "my-asg"
-  template_body = "${data.template_file.cloudformation_auto_scaling_group.render}"
+  name          = "my-asg"
+  template_body = "${data.template_file.cloudformation_auto_scaling_group.rendered}"
+}
 
 data "template_file" "cloudformation_auto_scaling_group" {
   template = "${file("cloudformation_auto_scaling_group.json.tpl")}"
 
   vars {
-    launch_configuration = "${resource.aws_launch_configuration.launch_configuration}"
-    min_size = 2
-    max_size = 2
+    launch_configuration = "${aws_launch_configuration.launch_configuration.name}"
+    max_size             = 2
+    min_size             = 2
   }
 }
-
