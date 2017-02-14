@@ -4,9 +4,9 @@
       "Type": "AWS::AutoScaling::AutoScalingGroup",
       "Properties": {
         "AvailabilityZones": "Fn::GetAZs",
-        "LaunchConfigurationName": "${aws_launch_configuration.launch_configuration.name}",
-        "MaxSize": "${var.max_size}",
-        "MinSize": "${var.min_size}",
+        "LaunchConfigurationName": "${launch_configuration}",
+        "MaxSize": "${max_size}",
+        "MinSize": "${min_size}",
       },
       "UpdatePolicy": {
         "AutoScalingRollingUpdate": {

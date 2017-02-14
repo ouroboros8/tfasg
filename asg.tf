@@ -21,10 +21,17 @@ resource "aws_launch_configuration" "launch_configuration" {
   instance_type = "t2.micro"
 }
 
-## Yeah ok need to extract this into a real template
-
 resource "aws_cloudformation_stack" "all_zones_asg" {
   name = "my-asg"
-  template_body = "${file("cloudformation_auto_scaling_group.json.tpl")}"
+  template_body = "${data.template_file.cloudformation_auto_scaling_group.render}"
+
+data "template_file" "cloudformation_auto_scaling_group" {
+  template = "${file("cloudformation_auto_scaling_group.json.tpl")}"
+
+  vars {
+    launch_configuration = "${resource.aws_launch_configuration.launch_configuration}"
+    min_size = 2
+    max_size = 2
+  }
 }
 
