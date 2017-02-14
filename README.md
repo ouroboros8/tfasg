@@ -12,3 +12,9 @@ MinInstancesInService is effectively an override to MinSize during the rolling
 upgrade; if it is equal to MaxSize, the upgrade can neither create new instances
 (because it would exceed MaxSize in doing so), nor terminate old instances
 (because it would dip below MinInstancesInService).
+
+AMI IDs
+--------
+
+  1. ami-bb373ddf (centos7)
+  2. ami-ede2e889 (ubuntu16)
