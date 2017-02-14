@@ -16,14 +16,6 @@ data "aws_ami" "ubuntu16" {
   }
 }
 
-variable "max_size" {
-  default = 2
-}
-
-variable "min_size" {
-  default = 2
-}
-
 resource "aws_launch_configuration" "launch_configuration" {
   image_id      = "${data.aws_ami.centos7.id}"
   instance_type = "t2.micro"
