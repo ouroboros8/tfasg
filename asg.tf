@@ -22,11 +22,33 @@ resource "aws_cloudformation_stack" "all_zones_asg" {
 }
 
 data "template_file" "cloudformation_auto_scaling_group" {
-  template = "${file("./cf.tpl")}"
 
   vars {
-    launch_configuration = "${aws_launch_configuration.launch_configuration.name}"
-    max_size             = 2
-    min_size             = 2
+    max_size             = 1
+    min_size             = 1
   }
+
+  template = <<EOF
+    {
+      "Resources": {
+        "MyAsg": {
+          "Type": "AWS::AutoScaling::AutoScalingGroup",
+          "Properties": {
+            "AvailabilityZones": {"Fn::GetAZs": "eu-west-2"},
+            "LaunchConfigurationName": "${aws_launch_configuration.launch_configuration.name}",
+            "MaxSize": $${max_size},
+            "MinSize": $${min_size}
+          },
+          "UpdatePolicy": {
+            "AutoScalingRollingUpdate": {
+              "MinInstancesInService": "0",
+              "MaxBatchSize": "1",
+              "PauseTime": "PT0S"
+            }
+          }
+        }
+      }
+    }
+  EOF
+
 }
