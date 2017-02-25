@@ -24,8 +24,8 @@ resource "aws_cloudformation_stack" "all_zones_asg" {
 data "template_file" "cloudformation_auto_scaling_group" {
 
   vars {
-    max_size             = 1
-    min_size             = 1
+    max_size             = 0
+    min_size             = 0
   }
 
   template = <<EOF
@@ -38,13 +38,6 @@ data "template_file" "cloudformation_auto_scaling_group" {
             "LaunchConfigurationName": "${aws_launch_configuration.launch_configuration.name}",
             "MaxSize": $${max_size},
             "MinSize": $${min_size}
-          },
-          "UpdatePolicy": {
-            "AutoScalingRollingUpdate": {
-              "MinInstancesInService": "0",
-              "MaxBatchSize": "1",
-              "PauseTime": "PT0S"
-            }
           }
         }
       }
